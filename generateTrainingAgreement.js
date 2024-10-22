@@ -25,9 +25,21 @@ async function copyTrainingFeesAgreementTemplate(accessToken, originalDocId, fir
 }
 
 async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
-  const docsApiUrl = `https://docs.googleapis.com/v1/documents/${docId}:batchUpdate`;
+  const docsApiUrl = `https://docs.googleapis.com/v1/documents/${docId}`;
 
-  const response = await fetch(docsApiUrl, {
+  const documentResponse = await fetch(docsApiUrl, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+  
+  const documentData = await documentResponse.json();
+  const docLength = documentData.body.content[documentData.body.content.length - 25].endIndex;
+
+  const batchUpdateApiUrl = `${docsApiUrl}:batchUpdate`;
+
+  const response = await fetch(batchUpdateApiUrl, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${accessToken}`,
@@ -87,6 +99,18 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
               matchCase: true,
             },
             replaceText: courseStartDate,
+          },
+        },
+        {
+          updateTextStyle: {
+            range: {
+              startIndex: 1,
+              endIndex: docLength - 1,
+            },
+            textStyle: {
+              backgroundColor: null,
+            },
+            fields: 'backgroundColor',
           },
         },
       ],
