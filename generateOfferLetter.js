@@ -5,7 +5,7 @@ const { getCandidateDetails } = require('./miscUtils');
 
 const credentials = JSON.parse(fs.readFileSync('credentials.json', 'utf8'));
 
-async function copyTrainingFeesAgreementTemplate(accessToken, originalDocId, firstName, lastName, date) {
+async function copyOfferLetterTemplate(accessToken, originalDocId, date) {
   const copyApiUrl = `https://www.googleapis.com/drive/v3/files/${originalDocId}/copy`;
 
   const response = await fetch(copyApiUrl, {
@@ -15,7 +15,7 @@ async function copyTrainingFeesAgreementTemplate(accessToken, originalDocId, fir
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: `${formatDateStructured(date)}_Training fees agreement_${firstName} ${lastName}`,
+      name: `${formatDateStructured(date)}_Offer Letter`,
     }),
   });
 
@@ -24,7 +24,7 @@ async function copyTrainingFeesAgreementTemplate(accessToken, originalDocId, fir
   return copyResponse.id;
 }
 
-async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
+async function modifyOfferLetter(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
   const docsApiUrl = `https://docs.googleapis.com/v1/documents/${docId}:batchUpdate`;
 
   const response = await fetch(docsApiUrl, {
@@ -38,16 +38,7 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
         {
           replaceAllText: {
             containsText: {
-              text: '2024',
-              matchCase: true,
-            },
-            replaceText: `${currentDate.year}`,
-          },
-        },
-        {
-          replaceAllText: {
-            containsText: {
-              text: '[FIRST NAME] [LAST NAME]',
+              text: '[NAME]',
               matchCase: true,
             },
             replaceText: `${firstName} ${lastName}`,
@@ -56,16 +47,7 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
         {
           replaceAllText: {
             containsText: {
-              text: '[First name] [Last name]',
-              matchCase: true,
-            },
-            replaceText: `${firstName.toUpperCase()} ${lastName.toUpperCase()}`,
-          },
-        },
-        {
-          replaceAllText: {
-            containsText: {
-              text: '[insert date]',
+              text: '[DATE]',
               matchCase: true,
             },
             replaceText: formatDateConventional(currentDate),
@@ -74,19 +56,28 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
         {
           replaceAllText: {
             containsText: {
-              text: '[Street address] [City] [Post Code]',
+              text: '[ADDRESS]',
               matchCase: true,
             },
-            replaceText: `${streetAddress}, ${city}, ${postCode}`,
+            replaceText: `${streetAddress}\n${city}\n${postCode}`,
           },
         },
         {
           replaceAllText: {
             containsText: {
-              text: '[Course Start Date]',
+              text: '[COHORT START DATE]',
               matchCase: true,
             },
             replaceText: courseStartDate,
+          },
+        },
+        {
+          replaceAllText: {
+            containsText: {
+              text: '[FIRST NAME]',
+              matchCase: true,
+            },
+            replaceText: `${firstName}`,
           },
         },
       ],
@@ -97,10 +88,10 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
   console.log(jsonResponse);
 }
 
-async function generateNewTrainingFeesAgreement(accessToken, templateDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
+async function generateOfferLetter(accessToken, templateDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
   try {
-    const newDocId = await copyTrainingFeesAgreementTemplate(accessToken, templateDocId, firstName, lastName, currentDate);
-    await modifyTrainingFeesAgreement(accessToken, newDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
+    const newDocId = await copyOfferLetterTemplate(accessToken, templateDocId, currentDate);
+    await modifyOfferLetter(accessToken, newDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
     console.log('New Training Fees Agreement copied and modified successfully.');
   } 
   catch (error) {
@@ -111,11 +102,11 @@ async function generateNewTrainingFeesAgreement(accessToken, templateDocId, firs
 (async function main() {
   try {
     const accessToken = credentials.installed.access_token;
-    const docId = credentials.installed.training_fees_agreement_template_id;
+    const docId = credentials.installed.offer_letter_template_id;
 
     const { firstName, lastName, streetAddress, city, postCode, courseStartDate} = getCandidateDetails();
     const currentDate = getCurrentDate();
-    await generateNewTrainingFeesAgreement(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
+    await generateOfferLetter(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
   } 
   catch (error) {
     console.error('Error:', error);
