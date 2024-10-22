@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-const { getCurrentDate, formatDateConventional, formatDateStructured } = require('./dateUtils');
-const { getCandidateDetails } = require('./miscUtils');
+const { getCurrentDate, formatDateConventional, formatDateStructured } = require('./utils/dateUtils');
+const { getCandidateDetails, shareDocumentWithUser } = require('./utils/miscUtils');
 
 const credentials = JSON.parse(fs.readFileSync('credentials.json', 'utf8'));
 
@@ -115,6 +115,8 @@ async function modifyOfferLetter(accessToken, docId, firstName, lastName, street
 async function generateOfferLetter(accessToken, templateDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
   try {
     const newDocId = await copyOfferLetterTemplate(accessToken, templateDocId, currentDate);
+    const emailToShareWith = credentials.installed.share_email;
+    shareDocumentWithUser(accessToken, newDocId, emailToShareWith)
     await modifyOfferLetter(accessToken, newDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
     console.log('New Training Fees Agreement copied and modified successfully.');
   } 
