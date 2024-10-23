@@ -107,7 +107,7 @@ Required information includes:
 - `streetAddress`
 - `city`
 - `postCode`
-- `courseStartDate` (format: e.g., 8th July)
+- `courseStartDate` (format: e.g. 8th July)
 
 ## Notes
 - Always handle sensitive data carefully to avoid exposing it in public repositories or logs.
