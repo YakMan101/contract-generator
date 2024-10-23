@@ -5,9 +5,9 @@
     - Equip the Google doc API
     - Equip the Google drive API
     - Create Service Account and create a new key
-- Before running any `generate*.js` script. Remember to share the google doc with the Service Account email. These must be google documents and not word documents. You must save those with .docx, .doc etc. extensions as a google doc first.
+- Before running any `generate*.js` script. Remember to share the Google doc with the Service Account email. These must be Google documents and **not** word documents. You must save those with .docx, .doc etc. extensions as a Google doc first.
 
-Note: none of the files use any libraries excpet sometimes `fs`, therefore, scripts can be run using almost any tool. For developement they have been tested using node.js.
+Note: none of the files use any libraries excpet sometimes `fs`, therefore, scripts can be run using almost any tool. For developement they have been tested using `node.js`.
 
 ## Generating Letters using Single File
 
