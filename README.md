@@ -1,3 +1,5 @@
+# SigmaLabs Contract Generator
+
 # Setup Sensitive Data Files
 
 1. Download the Service Account credentials and save as `neat-chain.json`  

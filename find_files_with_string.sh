@@ -1,1 +1,1 @@
-grep -Rnw --exclude-dir='node_modules' --exclude='authenticate.js' --exclude='*credentials.json' . -e ''
+grep -Rnw --exclude-dir='node_modules' --exclude='*.json' . -e 'email'

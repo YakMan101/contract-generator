@@ -384,7 +384,11 @@ async function generateNewTrainingFeesAgreement(accessToken, templateDocId, firs
   const accessToken = await getAccessToken(serviceAccountPemKey);
   const currentDate = getCurrentDate();
   const newOfferLetterDocId = await generateOfferLetter(accessToken, offerLetterDocTemplateId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
+  const newOfferLetterDocUrl = `https://docs.google.com/document/d/${newOfferLetterDocId}/edit`;
+  console.log('Training Fees Agreement URL:', newOfferLetterDocUrl);
   await shareDocumentWithUser(accessToken, newOfferLetterDocId, emailToShareWith);
   const newTrainingFeesAgreementDocId = await generateNewTrainingFeesAgreement(accessToken, trainingAgreementLetterTemplateId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate)
+  const newTrainingFeesAgreementDocUrl  = `https://docs.google.com/document/d/${newTrainingFeesAgreementDocId}/edit`;
+  console.log('Training Fees Agreement URL:', newTrainingFeesAgreementDocUrl );
   await shareDocumentWithUser(accessToken, newTrainingFeesAgreementDocId, emailToShareWith);
 })();
