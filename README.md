@@ -1,22 +1,25 @@
 # Setup Sensitive Data Files
 
-1. Download the Service Account credentials and save as `neat-chain.json`
-    make sure the following are in the file:
-    - Service Account email
-    - Service Account pemkey
+1. Download the Service Account credentials and save as `neat-chain.json`  
+    make sure at least the following are in the file:
+    ```
+    {
+        "private_key": <pem_key>,
+        "client_email": <service_account_email>,
+    }
+    ```
 
 2. Run `getAccessToken.js` to obtain access token.
 
 3. Create credentials.json and fill with:
-
-```
-{
-    "access_token": "<your_access_token>",
-    "training_fees_agreement_template_id": "<document_template_id>",
-    "offer_letter_template_id": "<document_template_id>",
-    "share_email": "<email_to_share_generated_documents_with>"
-}
-```
+    ```
+    {
+        "access_token": "<your_access_token>",
+        "training_fees_agreement_template_id": "<document_template_id>",
+        "offer_letter_template_id": "<document_template_id>",
+        "share_email": "<email_to_share_generated_documents_with>"
+    }
+    ```
 
 4. Add these `.json` files to the gitignore.
 
@@ -39,6 +42,6 @@ Before running the `generateOfferLetter` or `generateTrainingAgreement` scripts.
 - `generateTrainingAgreement.js`- Copies `offer_letter_template_id` word doc template and replaces string with specified candidate information.
 - `getAccessToken.js` - Can be used to generated a new access code/token for a given Service Account.
 - `utils/`
-    -`dateUtlis.js` - Some date functions to get current date and reformat in different ways.
-    -`miscUtils.js` - Miscellaneous but useful functions to aid contract generation.
+    - `dateUtlis.js` - Some date functions to get current date and reformat in different ways.
+    - `miscUtils.js` - Miscellaneous but useful functions to aid contract generation.
 - `candidate-data.json` - Sample file with fake candidate information.
