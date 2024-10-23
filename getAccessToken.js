@@ -2,7 +2,7 @@ const fs = require('fs');
 const https = require('https');
 const { URLSearchParams } = require('url');
 
-const authDetails = JSON.parse(fs.readFileSync('neat-chain-test.json', 'utf8'));
+const authDetails = JSON.parse(fs.readFileSync('neat-chain.json', 'utf8'));
 
 // Function to convert a PEM-formatted private key into a format usable by the Web Crypto API
 async function importPrivateKey(pem) {

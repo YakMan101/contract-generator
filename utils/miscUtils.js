@@ -24,7 +24,7 @@ async function shareDocumentWithUser(accessToken, documentId, userEmail) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      role: 'writer', // or 'reader' based on your requirement
+      role: 'writer',
       type: 'user',
       emailAddress: userEmail,
     }),

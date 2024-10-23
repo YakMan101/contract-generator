@@ -1,8 +1,13 @@
-# Secret Files
+# Setup Secret Files
 
-1. Download the Service Account credentials and save as `neat-chain-test.json`
+1. Download the Service Account credentials and save as `neat-chain.json`
+    make sure the following are in the file:
+    - Service Account email
+    - Service Account pemkey
 
-2. Create credentials.json and fill with:
+2. Run `getAccessToken.js` to obtain access token.
+
+3. Create credentials.json and fill with:
 
 ```
 {"installed":
@@ -15,4 +20,7 @@
 }
 ```
 
-3. Add these files to the gitignore.
+3. Add these `.json` files to the gitignore.
+
+# Generating Letters
+

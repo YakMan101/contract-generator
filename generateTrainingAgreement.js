@@ -25,21 +25,9 @@ async function copyTrainingFeesAgreementTemplate(accessToken, originalDocId, fir
 }
 
 async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
-  const docsApiUrl = `https://docs.googleapis.com/v1/documents/${docId}`;
+  const docsApiUrl = `https://docs.googleapis.com/v1/documents/${docId}:batchUpdate`;
 
-  const documentResponse = await fetch(docsApiUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-    },
-  });
-  
-  const documentData = await documentResponse.json();
-  const docLength = documentData.body.content[documentData.body.content.length - 25].endIndex;
-
-  const batchUpdateApiUrl = `${docsApiUrl}:batchUpdate`;
-
-  const response = await fetch(batchUpdateApiUrl, {
+  const response = await fetch(docsApiUrl, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${accessToken}`,
@@ -105,7 +93,7 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
           updateTextStyle: {
             range: {
               startIndex: 1,
-              endIndex: docLength - 1,
+              endIndex: 11000,
             },
             textStyle: {
               backgroundColor: null,
@@ -124,10 +112,9 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
 async function generateNewTrainingFeesAgreement(accessToken, templateDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
   try {
     const newDocId = await copyTrainingFeesAgreementTemplate(accessToken, templateDocId, firstName, lastName, currentDate);
-    const emailToShareWith = credentials.installed.share_email;
-    shareDocumentWithUser(accessToken, newDocId, emailToShareWith)
     await modifyTrainingFeesAgreement(accessToken, newDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
     console.log('New Training Fees Agreement copied and modified successfully.');
+    return newDocId
   } 
   catch (error) {
     console.error('Error:', error);
@@ -136,12 +123,14 @@ async function generateNewTrainingFeesAgreement(accessToken, templateDocId, firs
 
 (async function main() {
   try {
-    const accessToken = credentials.installed.access_token;
-    const docId = credentials.installed.training_fees_agreement_template_id;
+    const accessToken = credentials.access_token;
+    const docId = credentials.training_fees_agreement_template_id;
 
     const { firstName, lastName, streetAddress, city, postCode, courseStartDate} = getCandidateDetails();
     const currentDate = getCurrentDate();
-    await generateNewTrainingFeesAgreement(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
+    newDocId = await generateNewTrainingFeesAgreement(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
+    const emailToShareWith = credentials.share_email;
+    shareDocumentWithUser(accessToken, newDocId, emailToShareWith)
   } 
   catch (error) {
     console.error('Error:', error);

@@ -28,7 +28,6 @@ function formatDateConventional(dateComponents) {
 function formatDateStructured(dateComponents) {
   const { year, monthIndex, day } = dateComponents;
 
-  // Pad month and day with leading zeros if necessary
   const formattedMonth = String(monthIndex + 1).padStart(2, '0'); // monthIndex is 0-based
   const formattedDay = String(day).padStart(2, '0');
 

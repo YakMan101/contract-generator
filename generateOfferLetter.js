@@ -25,21 +25,9 @@ async function copyOfferLetterTemplate(accessToken, originalDocId, date) {
 }
 
 async function modifyOfferLetter(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
-  const docsApiUrl = `https://docs.googleapis.com/v1/documents/${docId}`;
+  const docsApiUrl = `https://docs.googleapis.com/v1/documents/${docId}:batchUpdate`;
 
-  const documentResponse = await fetch(docsApiUrl, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-    },
-  });
-  
-  const documentData = await documentResponse.json();
-  const docLength = documentData.body.content[documentData.body.content.length - 1].endIndex;
-
-  const batchUpdateApiUrl = `${docsApiUrl}:batchUpdate`;
-
-  const response = await fetch(batchUpdateApiUrl, {
+  const response = await fetch(docsApiUrl, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${accessToken}`,
@@ -96,7 +84,7 @@ async function modifyOfferLetter(accessToken, docId, firstName, lastName, street
           updateTextStyle: {
             range: {
               startIndex: 1,
-              endIndex: docLength - 1,
+              endIndex: 9940,
             },
             textStyle: {
               backgroundColor: null,
@@ -115,10 +103,9 @@ async function modifyOfferLetter(accessToken, docId, firstName, lastName, street
 async function generateOfferLetter(accessToken, templateDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
   try {
     const newDocId = await copyOfferLetterTemplate(accessToken, templateDocId, currentDate);
-    const emailToShareWith = credentials.installed.share_email;
-    shareDocumentWithUser(accessToken, newDocId, emailToShareWith)
     await modifyOfferLetter(accessToken, newDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
     console.log('New Training Fees Agreement copied and modified successfully.');
+    return newDocId;
   } 
   catch (error) {
     console.error('Error:', error);
@@ -127,12 +114,14 @@ async function generateOfferLetter(accessToken, templateDocId, firstName, lastNa
 
 (async function main() {
   try {
-    const accessToken = credentials.installed.access_token;
-    const docId = credentials.installed.offer_letter_template_id;
+    const accessToken = credentials.access_token;
+    const docId = credentials.offer_letter_template_id;
 
     const { firstName, lastName, streetAddress, city, postCode, courseStartDate} = getCandidateDetails();
     const currentDate = getCurrentDate();
-    await generateOfferLetter(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
+    const newDocId = await generateOfferLetter(accessToken, docId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
+    const emailToShareWith = credentials.share_email;
+    shareDocumentWithUser(accessToken, newDocId, emailToShareWith)
   } 
   catch (error) {
     console.error('Error:', error);
