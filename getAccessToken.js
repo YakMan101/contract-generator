@@ -1,6 +1,4 @@
 const fs = require('fs');
-const https = require('https');
-const { URLSearchParams } = require('url');
 
 const authDetails = JSON.parse(fs.readFileSync('neat-chain.json', 'utf8'));
 
@@ -10,14 +8,14 @@ async function importPrivateKey(pem) {
     .replace(/-----BEGIN PRIVATE KEY-----/, '')
     .replace(/-----END PRIVATE KEY-----/, '')
     .replace(/\n/g, '');
-  
+
   const binaryDer = Buffer.from(keyData, 'base64');
 
   return await crypto.subtle.importKey(
-    'pkcs8', 
-    binaryDer, 
+    'pkcs8',
+    binaryDer,
     { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
-    true, 
+    true,
     ['sign']
   );
 }
@@ -30,8 +28,15 @@ function base64url(source) {
   return encodedSource;
 }
 
+// Function to URL-encode data manually
+function urlEncode(data) {
+  return Object.keys(data)
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+    .join('&');
+}
+
 function getJwt() {
-  const header = {alg: "RS256", typ: "JWT"};
+  const header = { alg: "RS256", typ: "JWT" };
   const now = Math.floor(Date.now() / 1000);
 
   const scopes = [
@@ -53,7 +58,7 @@ function getJwt() {
 
 // Function to sign the JWT with the private key
 async function signJwt(privatePemKey) {
-  const jwt = getJwt()
+  const jwt = getJwt();
   const privateKey = await importPrivateKey(privatePemKey);
   const signature = await crypto.subtle.sign(
     { name: 'RSASSA-PKCS1-v1_5' },
@@ -65,52 +70,32 @@ async function signJwt(privatePemKey) {
   return signedJwt;
 }
 
-// Send the JWT to Google's OAuth2 token endpoint using native HTTPS module
+// Send the JWT to Google's OAuth2 token endpoint using fetch
 async function getAccessToken(privatePemKey) {
   const signedJwt = await signJwt(privatePemKey);
 
-  const postData = new URLSearchParams({
+  const postData = urlEncode({
     grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
     assertion: signedJwt
-  }).toString();
+  });
 
-  const options = {
-    hostname: 'www.googleapis.com',
-    path: '/oauth2/v3/token',
+  const response = await fetch('https://www.googleapis.com/oauth2/v3/token', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': postData.length
-    }
-  };
-
-  return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
-      let data = '';
-
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
-
-      res.on('end', () => {
-        const response = JSON.parse(data);
-        if (response.access_token) {
-          console.log('Access Token:', response.access_token);
-          resolve(response.access_token);
-        } else {
-          console.error('Error:', response);
-          reject(response);
-        }
-      });
-    });
-
-    req.on('error', (error) => {
-      console.error('Request error:', error);
-      reject(error);
-    });
-    req.write(postData);
-    req.end();
+    },
+    body: postData
   });
+
+  const data = await response.json();
+
+  if (data.access_token) {
+    console.log('Access Token:', data.access_token);
+    return data.access_token;
+  } else {
+    console.error('Error:', data);
+    throw new Error(data);
+  }
 }
 
 // Run the function to get the access token
