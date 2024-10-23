@@ -1,4 +1,4 @@
-# Setup Secret Files
+# Setup Sensitive Data Files
 
 1. Download the Service Account credentials and save as `neat-chain.json`
     make sure the following are in the file:
