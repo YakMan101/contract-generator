@@ -22,3 +22,4 @@
 
 # Generating Letters
 
+Before running the `generateOfferLetter` or `generateTrainingAgreement` scripts. Remember to share the google doc with the Service Account email. These must be google documents and not word documents (e.g: those with .docx, .doc extensions).
