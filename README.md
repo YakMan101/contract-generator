@@ -31,4 +31,4 @@ At the moment candidate details are pulled from `candidate-details.json` using t
 
 # Generating Letters
 
-Before running the `generateOfferLetter` or `generateTrainingAgreement` scripts. Remember to share the google doc with the Service Account email. These must be google documents and not word documents (e.g: those with .docx, .doc extensions).
+Before running the `generateOfferLetter` or `generateTrainingAgreement` scripts. Remember to share the google doc with the Service Account email. These must be google documents and not word documents. You must save those with .docx, .doc etc. extensions into a google doc first.
