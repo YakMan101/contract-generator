@@ -37,6 +37,8 @@ const offerLetterDocTemplateId = "<offer_letter_template_id>";  // Can be found 
 const trainingAgreementLetterTemplateId = "training_agreement_template_id";
 const emailToShareWith = "<your_email>";
 ```
+**Warning:** Careful when setting the sensitive information. Make sure the data is exposed GitHub or any other public sources.
+
 ### Extracting Google Doc ID
 Google Document IDs can be extracted from their URLs.  
 For example, in the URL `https://docs.google.com/document/d/1abcdEfGhIjKlMnOpQrStUvWxYz1234567890/edit`, the document ID is the portion after `/d/` and before `/edit` (`1abcdEfGhIjKlMnOpQrStUvWxYz1234567890`).
