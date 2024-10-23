@@ -26,7 +26,6 @@ function base64url(source) {
   return encodedSource;
 }
 
-
 function urlEncode(data) {
   return Object.keys(data)
     .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
