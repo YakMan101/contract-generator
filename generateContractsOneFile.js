@@ -120,7 +120,7 @@ function getDayWithSuffix(day) {
                    (day % 10 === 2 && day % 100 !== 12) ? 'nd' :
                    (day % 10 === 3 && day % 100 !== 13) ? 'rd' : 'th';
     return `${day}${suffix}`;
-  }
+}
 
 function formatDateConventional(dateComponents) {
   const { day, monthIndex, year } = dateComponents;
