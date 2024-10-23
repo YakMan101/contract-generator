@@ -5,7 +5,7 @@ const { getCandidateDetails, shareDocumentWithUser } = require('./utils/miscUtil
 
 const credentials = JSON.parse(fs.readFileSync('credentials.json', 'utf8'));
 
-async function copyOfferLetterTemplate(accessToken, originalDocId, date) {
+async function copyOfferLetterTemplate(accessToken, originalDocId, firstName, lastName, date) {
   const copyApiUrl = `https://www.googleapis.com/drive/v3/files/${originalDocId}/copy`;
 
   const response = await fetch(copyApiUrl, {
@@ -15,7 +15,7 @@ async function copyOfferLetterTemplate(accessToken, originalDocId, date) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: `${formatDateStructured(date)}_Offer Letter`,
+      name: `${formatDateStructured(date)}_Offer Letter_${firstName} ${lastName}`,
     }),
   });
 
@@ -84,7 +84,7 @@ async function modifyOfferLetter(accessToken, docId, firstName, lastName, street
           updateTextStyle: {
             range: {
               startIndex: 1,
-              endIndex: 9940,
+              endIndex: 11400,
             },
             textStyle: {
               backgroundColor: null,
@@ -102,9 +102,9 @@ async function modifyOfferLetter(accessToken, docId, firstName, lastName, street
 
 async function generateOfferLetter(accessToken, templateDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate) {
   try {
-    const newDocId = await copyOfferLetterTemplate(accessToken, templateDocId, currentDate);
+    const newDocId = await copyOfferLetterTemplate(accessToken, templateDocId, firstName, lastName, currentDate);
     await modifyOfferLetter(accessToken, newDocId, firstName, lastName, streetAddress, city, postCode, courseStartDate, currentDate);
-    console.log('New Training Fees Agreement copied and modified successfully.');
+    console.log('New Offer Letter copied and modified successfully.');
     return newDocId;
   } 
   catch (error) {

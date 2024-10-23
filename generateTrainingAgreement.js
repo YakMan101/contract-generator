@@ -38,19 +38,10 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
         {
           replaceAllText: {
             containsText: {
-              text: '2024',
-              matchCase: true,
-            },
-            replaceText: `${currentDate.year}`,
-          },
-        },
-        {
-          replaceAllText: {
-            containsText: {
               text: '[FIRST NAME] [LAST NAME]',
               matchCase: true,
             },
-            replaceText: `${firstName} ${lastName}`,
+            replaceText: `${firstName.toUpperCase()} ${lastName.toUpperCase()}`,
           },
         },
         {
@@ -59,7 +50,7 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
               text: '[First name] [Last name]',
               matchCase: true,
             },
-            replaceText: `${firstName.toUpperCase()} ${lastName.toUpperCase()}`,
+            replaceText: `${firstName} ${lastName}`,
           },
         },
         {
@@ -93,7 +84,7 @@ async function modifyTrainingFeesAgreement(accessToken, docId, firstName, lastNa
           updateTextStyle: {
             range: {
               startIndex: 1,
-              endIndex: 11000,
+              endIndex: 9919,
             },
             textStyle: {
               backgroundColor: null,

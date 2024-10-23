@@ -38,5 +38,9 @@ async function shareDocumentWithUser(accessToken, documentId, userEmail) {
   console.log(`Document shared with ${userEmail} successfully.`);
 }
 
+function capitaliseFirstLetter(word) {
+    return word[0].toUpperCase() + word.slice(1);
+}
 
-module.exports = { getCandidateDetails, shareDocumentWithUser};
+
+module.exports = { getCandidateDetails, shareDocumentWithUser, capitaliseFirstLetter};
