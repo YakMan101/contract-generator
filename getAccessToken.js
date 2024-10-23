@@ -2,7 +2,6 @@ const fs = require('fs');
 
 const authDetails = JSON.parse(fs.readFileSync('neat-chain.json', 'utf8'));
 
-// Function to convert a PEM-formatted private key into a format usable by the Web Crypto API
 async function importPrivateKey(pem) {
   const keyData = pem
     .replace(/-----BEGIN PRIVATE KEY-----/, '')
@@ -20,7 +19,6 @@ async function importPrivateKey(pem) {
   );
 }
 
-// Helper function to base64 URL encode a string
 function base64url(source) {
   let encodedSource = Buffer.from(source).toString('base64');
   encodedSource = encodedSource.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -28,7 +26,7 @@ function base64url(source) {
   return encodedSource;
 }
 
-// Function to URL-encode data manually
+
 function urlEncode(data) {
   return Object.keys(data)
     .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
@@ -56,7 +54,6 @@ function getJwt() {
   return `${encodedHeader}.${encodedPayload}`;
 }
 
-// Function to sign the JWT with the private key
 async function signJwt(privatePemKey) {
   const jwt = getJwt();
   const privateKey = await importPrivateKey(privatePemKey);
@@ -70,7 +67,6 @@ async function signJwt(privatePemKey) {
   return signedJwt;
 }
 
-// Send the JWT to Google's OAuth2 token endpoint using fetch
 async function getAccessToken(privatePemKey) {
   const signedJwt = await signJwt(privatePemKey);
 
@@ -98,7 +94,6 @@ async function getAccessToken(privatePemKey) {
   }
 }
 
-// Run the function to get the access token
 (async function main() {
   const privatePemKey = authDetails.private_key;
   await getAccessToken(privatePemKey);
