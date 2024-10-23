@@ -10,13 +10,11 @@
 3. Create credentials.json and fill with:
 
 ```
-{"installed":
-    {
-        "access_token": "<your_access_token>",
-        "training_fees_agreement_template_id": "<document_template_id>",
-        "offer_letter_template_id": "<document_template_id>",
-        "share_email": "<email_to_share_generated_documents_with>"
-    }
+{
+    "access_token": "<your_access_token>",
+    "training_fees_agreement_template_id": "<document_template_id>",
+    "offer_letter_template_id": "<document_template_id>",
+    "share_email": "<email_to_share_generated_documents_with>"
 }
 ```
 
