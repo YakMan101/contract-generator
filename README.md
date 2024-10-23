@@ -18,7 +18,16 @@
 }
 ```
 
-3. Add these `.json` files to the gitignore.
+4. Add these `.json` files to the gitignore.
+
+## Notes
+At the moment candidate details are pulled from `candidate-details.json` using the `getCandidateDetails()` function in `utils/miscUtils.js` but these details can be introduced in script which ever way is convenient as long as the following information is present:
+- `firstName`
+- `lastName`
+- `streetAddress`
+- `city`
+- `postCode`
+- `courseStartDate`  (in the format e.g. 8th July)
 
 # Generating Letters
 
